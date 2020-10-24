@@ -68,7 +68,8 @@ def joinGroup(request):
                 if Groups.objects.filter(group_code=code, group_type=True):
                     # need to change this code, to redirect to group
                     if JoinedGroup.objects.filter(user_id=request.session['user_id'], group_id__group_code=code).exists():
-                        return HttpResponse("You entered a group that you already joined")
+                        gobj = Groups.objects.get(group_code=code)
+                        return HttpResponseRedirect(reverse('group', kwargs={'group_id': gobj.id}))
                     else:
                         gobj = Groups.objects.get(group_code=code)
 
@@ -78,7 +79,7 @@ def joinGroup(request):
                         obj.save()
 
                         messages.success(request, " Group found successfully.")
-                        return HttpResponse("You are new to this group")
+                        return HttpResponseRedirect(reverse('group', kwargs={'group_id': gobj.id}))
 
                     #return HttpResponseRedirect(reverse('joinGroup'))
                 else:
@@ -123,6 +124,7 @@ def createGroup(request):
 
 def showGroup(request,group_id):
     groupObj = JoinedGroup.objects.filter(group_id=group_id)
+    print(group_id)
     ownerObj = Groups.objects.get(id=group_id)
     totalReviews = Reviews.objects.filter(group_id=group_id).count
     return render(request, "groups.html",{'group_details': groupObj,'GroupOwner': ownerObj,'TotalReview': totalReviews})
@@ -164,5 +166,33 @@ def showReviews(request):
     if request.session.has_key('user_id'):
         reviewObj = Reviews.objects.filter(user_id_id=request.session['user_id'])
         return render(request, 'myReviews.html',{'reviews': reviewObj})
+    else:
+        return render(request, 'login.html')
+
+
+def markAsRead(request,review_id):
+    if request.session.has_key('user_id'):
+        obj = Reviews.objects.get(id=review_id)
+        obj.delete()
+
+        messages.success(request, "That review is vanished")
+        return HttpResponseRedirect(reverse('showMyReview'))
+    else:
+        return render(request, "login.html")
+
+
+def changeGroupPermission(request,group_id):
+    if request.session.has_key('user_id'):
+        obj = Groups.objects.get(id=group_id)
+        print(obj.group_type)
+        if obj.group_type:
+            obj.group_type = False
+            obj.save()
+        else:
+            obj.group_type = True
+            obj.save()
+
+        messages.info(request, " Group Permission Changed")
+        return HttpResponseRedirect(reverse('group', kwargs={'group_id': group_id}))
     else:
         return render(request, 'login.html')

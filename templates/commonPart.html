@@ -51,9 +51,11 @@
         <div class="user-menus">
             <a href="{% url 'showMyGroup' %}" class="user-menu-buttons active-menus-groups"><i class="fas fa-users uicons"></i> My groups</a>
             <a href="{% url 'showMyReview' %}" class="user-menu-buttons active-menus-reviews"><i class="fas fa-pencil-alt uicons"></i> My Reviews
+                {% if totalReviews %}
             <div class="total-review-box">
-                <p id="review-text">0</p>
+                <p id="review-text">{{ totalReviews }}</p>
             </div>
+                {% endif %}
              </a>
         </div>
 

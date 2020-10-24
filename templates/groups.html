@@ -10,21 +10,23 @@
             {% if group_details %}
                 {% for group in group_details %}
                     {% if group.user_id_id  != request.session.user_id %}
-                    <div class="review-box">
-                        <a href="#"><i class="fas fa-times close-button"></i></a>
-                        <div class="review-top">
-                            <h4 class="group-username">{{ group.user_id.name }}</h4>
-                            <h5 class="group-user-about">{{ group.user_id.email }}</h5>
+                        <div class="review-box">
+                            {% if GroupOwner.user_id_id == request.session.user_id %}
+                                <a href="#"><i class="fas fa-times close-button"></i></a>
+                            {% endif %}
+                            <div class="review-top">
+                                <h4 class="group-username">{{ group.user_id.name }}</h4>
+                                <h5 class="group-user-about">{{ group.user_id.email }}</h5>
+                            </div>
+                            <form method="POST" action="{% url 'addReview' %}" class="review-bottom">
+                                {% csrf_token %}
+                                <i class="fas fa-comment-alt review-icon"></i>
+                                <input type="text" placeholder="Say something about me" class="review-input" id="review" required name="review">
+                                <input type="hidden" id="userid" name="userid" value="{{ group.user_id_id }}">
+                                <input type="hidden" id="groupid" name="groupid" value="{{ group.group_id_id }}">
+                                <button type="submit" name="review-submit" class="review-button"><i class="fas fa-paper-plane pdspace"></i> send</button>
+                            </form>
                         </div>
-                        <form method="POST" action="{% url 'addReview' %}" class="review-bottom">
-                            {% csrf_token %}
-                            <i class="fas fa-comment-alt review-icon"></i>
-                            <input type="text" placeholder="Say something about me" class="review-input" id="review" required name="review">
-                            <input type="hidden" id="userid" name="userid" value="{{ group.user_id_id }}">
-                            <input type="hidden" id="groupid" name="groupid" value="{{ group.group_id_id }}">
-                            <button type="submit" name="review-submit" class="review-button"><i class="fas fa-paper-plane pdspace"></i> send</button>
-                        </form>
-                    </div>
                     {% endif %}
                 {% endfor %}
             {% else %}
@@ -63,9 +65,14 @@
                 <h2 class="total-members">{{ TotalReview }}</h2>
 
                 {% if GroupOwner.user_id_id == request.session.user_id %}
-                <a href="#" class="group-close-button open-button"><i class="fas fa-lock-open pdspace"></i> OPEN GROUP</a>';
+                    {% if GroupOwner.group_type %}
+                        <a href="{% url 'changeGroupPermission' GroupOwner.id %}" class="group-close-button open-button"><i class="fas fa-lock pdspace"></i> CLOSE GROUP</a>';
+                    {% else %}
+                        <a href="{% url 'changeGroupPermission' GroupOwner.id %}" class="group-close-button open-button"><i class="fas fa-lock-open pdspace"></i> OPEN GROUP</a>';
+                    {% endif %}
+
                 {% else %}
-                <a href="#" class="group-close-button"><i class="fas fa-sign-out-alt pdspace"></i> LEAVE GROUP</a>';
+                    <a href="#" class="group-close-button"><i class="fas fa-sign-out-alt pdspace"></i> LEAVE GROUP</a>';
                 {% endif %}
 
 

@@ -11,5 +11,7 @@ urlpatterns = [
     path('showMyGroup/', views.showMyGroups, name="showMyGroup"),
     path('logout/', views.logout, name="logout"),
     path('addReview/', views.addReview, name='addReview'),
-    path('showMyReview/', views.showReviews, name='showMyReview')
+    path('showMyReview/', views.showReviews, name='showMyReview'),
+    path('<int:review_id>/markAsReview/', views.markAsRead, name="markAsRead"),
+    path('<int:group_id>/changeGroupPermission/', views.changeGroupPermission, name="changeGroupPermission")
 ]

@@ -19,7 +19,7 @@
                     <div class="review-user-box"></div>
                     <h3 class="review-text">{{ review.review }}</h3>
                     <div class="mark-as-read-box">
-                        <a href="#" class="mark-as-read">MARK AS READ</a>
+                        <a href="{% url 'markAsRead' review.id %}" class="mark-as-read">MARK AS READ</a>
                     </div>
                 </div>
             {% endfor %}
