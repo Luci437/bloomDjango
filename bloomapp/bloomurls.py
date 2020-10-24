@@ -13,5 +13,7 @@ urlpatterns = [
     path('addReview/', views.addReview, name='addReview'),
     path('showMyReview/', views.showReviews, name='showMyReview'),
     path('<int:review_id>/markAsReview/', views.markAsRead, name="markAsRead"),
-    path('<int:group_id>/changeGroupPermission/', views.changeGroupPermission, name="changeGroupPermission")
+    path('<int:group_id>/changeGroupPermission/', views.changeGroupPermission, name="changeGroupPermission"),
+    path('<int:group_id>/deleteGroup/', views.deleteGroup, name="deleteGroup"),
+    path('<int:user_id>/<int:group_id>/deleteUser/', views.removeUser, name="deleteUser")
 ]

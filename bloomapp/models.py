@@ -24,9 +24,9 @@ class JoinedGroup(models.Model):
 
 class Reviews(models.Model):
     review = models.CharField(max_length=500)
-    user_id = models.ForeignKey(Account, on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
-    group_id = models.ForeignKey(Groups, on_delete=models.DO_NOTHING, null=True)
+    group_id = models.ForeignKey(Groups, on_delete=models.CASCADE, null=True)
 
 
 

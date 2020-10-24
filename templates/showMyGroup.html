@@ -1,36 +1,40 @@
 {% extends 'commonPart.html' %}
 
 {% block mainpart %}
-{% load static %}
-<style>
-.active-menus-groups {
-    background: #241663;
-    color: white;
-}
-</style>
-<div class="show-group-main-container">
-    <!-- <h2 class="main-title-groups">Joined Group</h2> -->
+    {% load static %}
+    <style>
+        .active-menus-groups {
+            background: #241663;
+            color: white;
+        }
+    </style>
+    <div class="show-group-main-container">
+        <!-- <h2 class="main-title-groups">Joined Group</h2> -->
         <!-- ** -->
 
-            {% if not group_details %}
-                    <div class="no-group-box">
-                    <div class="video-text-box">
+        {% if not group_details %}
+            <div class="no-group-box">
+                <div class="video-text-box">
                     <h1 class="video-text" style="color: rgba(255,255,255,0.6);"><i class="fab fa-cloudversify pdspace"></i>Void </h1>
                     <h2 style="color: rgba(255, 255, 255, 0.5);">You haven't join any group bro, try create or join a group.</h2>
-                    </div>
-                        <video autoplay loop playsinline src="{% static 'images/terraforge-video.mp4' %}" class="no-group-video"></video>
-                    </div>
-            {% else %}
+                </div>
+                <video autoplay loop playsinline src="{% static 'images/terraforge-video.mp4' %}" class="no-group-video"></video>
+            </div>
+        {% else %}
 
-                <h2 class="main-title-groups">Joined Group</h2>
-                <h4 class="main-title-groups" style="font-weight: lighter;padding: 10px 0 16px 0;">You can see all your groups here, making ease access to it.</h4>
-                <div class="my-each-group">
+            <h2 class="main-title-groups">Joined Group</h2>
+            <h4 class="main-title-groups" style="font-weight: lighter;padding: 10px 0 16px 0;">You can see all your groups here, making ease access to it.</h4>
+            <div class="my-each-group">
                 {% for group in group_details %}
                     <a href="{% url 'group' group.group_id_id %}"><div class="each-group-box">
                         <div class="each-gp-video-box">
                             <video class="each-gp-video" autoplay src="{% static 'images/Snow Scene.mp4' %}" playsinline loop ></video>
                         </div>
                         <div class="group-each-black-cover"></div>
+                            {% if group.group_id.user_id_id == request.session.user_id %}
+                                <i class="fas fa-star owned-group" title="Group created by you"></i>
+                            {% endif %}
+
                         <div class="each-gp-details-box">
                             <h3 class="group-each-name">{{ group.group_id.group_name }}</h3>
                             <h4 class="group-each-username">
@@ -43,35 +47,35 @@
                         </div>
                     </div></a>
                 {% endfor %}
-        <!-- ** -->
+                <!-- ** -->
+            </div>
+        {% endif %}
     </div>
-            {% endif %}
-</div>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    let video_names = ['360-dribbble','dribbble_1','floppydrib','morphy','Pirelli Spin','Snow Scene','tie_dye_particles','ai motion','ai Motion2'];
-    let total_videos = video_names.length;
-    let el = document.getElementsByClassName('each-gp-video');
-    let video_arr = [];
-    let rnd;
-    for(let i=0;i<el.length;i++) {
-        while(true) {
-            rnd = Math.floor(Math.random() * total_videos);
-            if(video_arr.includes(rnd)) {
-                continue;
-            }else {
-                video_arr.push(rnd);
-                break;
+        let video_names = ['360-dribbble','dribbble_1','floppydrib','morphy','Pirelli Spin','Snow Scene','tie_dye_particles','ai motion','ai Motion2'];
+        let total_videos = video_names.length;
+        let el = document.getElementsByClassName('each-gp-video');
+        let video_arr = [];
+        let rnd;
+        for(let i=0;i<el.length;i++) {
+            while(true) {
+                rnd = Math.floor(Math.random() * total_videos);
+                if(video_arr.includes(rnd)) {
+                    continue;
+                }else {
+                    video_arr.push(rnd);
+                    break;
+                }
+            }
+            el[i].src = "/static/images/"+ video_names[rnd]+".mp4";
+            if(video_arr.length === total_videos) {
+                video_arr = [];
             }
         }
-        el[i].src = "/static/images/"+ video_names[rnd]+".mp4";
-        if(video_arr.length === total_videos) {
-            video_arr = [];
-        }
-    }
 
 
-</script>
+    </script>
 
 {% endblock %}

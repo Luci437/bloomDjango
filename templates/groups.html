@@ -7,12 +7,12 @@
         <div class="group-member-box" id="group-members-box">
 
             <!-- ** -->
-            {% if group_details %}
+            {% if group_details and group_details.count >= 2 %}
                 {% for group in group_details %}
                     {% if group.user_id_id  != request.session.user_id %}
                         <div class="review-box">
                             {% if GroupOwner.user_id_id == request.session.user_id %}
-                                <a href="#"><i class="fas fa-times close-button"></i></a>
+                                <a href="{% url 'deleteUser' group.user_id_id group.group_id_id %}"><i class="fas fa-times close-button"></i></a>
                             {% endif %}
                             <div class="review-top">
                                 <h4 class="group-username">{{ group.user_id.name }}</h4>
@@ -33,7 +33,7 @@
 
 
                 <div class="empty-group">
-                    <a href="includes/deleteGroup.inc.php?groupId='.$gid.'" class="group-close-button"><i class="fas fa-eraser pdspace"></i> DELETE GROUP</a>
+                    <a href="{% url 'deleteGroup' GroupOwner.id %}" class="group-close-button"><i class="fas fa-eraser pdspace"></i> DELETE GROUP</a>
                 </div>
             {% endif %}
             <!-- *** -->

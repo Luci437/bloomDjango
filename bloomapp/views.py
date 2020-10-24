@@ -20,6 +20,8 @@ def login(request):
             request.session['user_id'] = obj.id
 
             return HttpResponseRedirect(reverse('joinGroup'))
+        else:
+            messages.error(request, " Invalid email/password combination")
 
     return render(request, 'login.html')
 
@@ -45,7 +47,6 @@ def signup(request):
 def checkUsername(request):
     if request.method == 'POST':
         email = request.POST['email']
-        print(email)
 
         obj = Account.objects.filter(email=email)
         if obj:
@@ -63,7 +64,7 @@ def checkUsername(request):
 def joinGroup(request):
     if request.session.has_key('user_id'):
         if request.method == 'POST':
-            code = request.POST['code']
+            code = request.POST['code'].lower()
             if Groups.objects.filter(group_code=code):
                 if Groups.objects.filter(group_code=code, group_type=True):
                     # need to change this code, to redirect to group
@@ -116,15 +117,19 @@ def createGroup(request):
                     groupObj.group_type = True
                     groupObj.save()
 
+                    jgp = JoinedGroup()
+                    jgp.user_id = userObj
+                    jgp.group_id = groupObj
+                    jgp.save()
+
                     messages.success(request," Group created successfully.")
-                    return HttpResponseRedirect(reverse('joinGroup'))
+                    return HttpResponseRedirect(reverse('group', kwargs={'group_id': groupObj.id}))
     else:
         return HttpResponseRedirect(reverse('login'))
 
 
 def showGroup(request,group_id):
     groupObj = JoinedGroup.objects.filter(group_id=group_id)
-    print(group_id)
     ownerObj = Groups.objects.get(id=group_id)
     totalReviews = Reviews.objects.filter(group_id=group_id).count
     return render(request, "groups.html",{'group_details': groupObj,'GroupOwner': ownerObj,'TotalReview': totalReviews})
@@ -136,7 +141,9 @@ def showMyGroups(request):
 
 
 def logout(request):
-    del request.session['user_id']
+    if request.session.has_key('user_id'):
+        del request.session['user_id']
+        messages.success(request, " Logged out successfully")
     return HttpResponseRedirect(reverse('login'))
 
 
@@ -184,7 +191,6 @@ def markAsRead(request,review_id):
 def changeGroupPermission(request,group_id):
     if request.session.has_key('user_id'):
         obj = Groups.objects.get(id=group_id)
-        print(obj.group_type)
         if obj.group_type:
             obj.group_type = False
             obj.save()
@@ -196,3 +202,27 @@ def changeGroupPermission(request,group_id):
         return HttpResponseRedirect(reverse('group', kwargs={'group_id': group_id}))
     else:
         return render(request, 'login.html')
+
+
+def deleteGroup(request, group_id):
+    if request.session.has_key('user_id'):
+        obj = Groups.objects.get(id=group_id)
+        obj.delete()
+
+        messages.success(request, " Group deleted successfully.")
+
+        return HttpResponseRedirect(reverse('showMyGroup'))
+    else:
+        return login(request)
+
+
+def removeUser(request, user_id, group_id):
+    if request.session.has_key('user_id'):
+        print(user_id, group_id)
+        obj = JoinedGroup.objects.get(user_id_id=user_id, group_id_id=group_id)
+        obj.delete()
+
+        messages.success(request, " Member has been kicked successfully.")
+        return HttpResponseRedirect(reverse('group', kwargs={'group_id': group_id}))
+    else:
+        return login(request)

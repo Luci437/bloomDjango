@@ -50,7 +50,7 @@
         {% if messages %}
             {% for message in messages %}
                 {% if message.tags == 'error' %}
-                <p class="success-message"><i class="fas fa-check-circle"></i> {{ message }}</p>
+                <p class="error-message"><i class="fas fa-check-circle"></i> {{ message }}</p>
                 {% endif %}
             {% endfor %}
         {% endif %}
