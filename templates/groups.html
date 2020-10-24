@@ -1,0 +1,112 @@
+{% extends 'commonPart.html' %}
+
+{% block mainpart %}
+    {% load static %}
+
+    <div class="group-detail-container">
+        <div class="group-member-box" id="group-members-box">
+
+            <!-- ** -->
+            {% if group_details %}
+                {% for group in group_details %}
+                    {% if group.user_id_id  != request.session.user_id %}
+                    <div class="review-box">
+                        <a href="#"><i class="fas fa-times close-button"></i></a>
+                        <div class="review-top">
+                            <h4 class="group-username">{{ group.user_id.name }}</h4>
+                            <h5 class="group-user-about">{{ group.user_id.email }}</h5>
+                        </div>
+                        <form method="POST" action="{% url 'addReview' %}" class="review-bottom">
+                            {% csrf_token %}
+                            <i class="fas fa-comment-alt review-icon"></i>
+                            <input type="text" placeholder="Say something about me" class="review-input" id="review" required name="review">
+                            <input type="hidden" id="userid" name="userid" value="{{ group.user_id_id }}">
+                            <input type="hidden" id="groupid" name="groupid" value="{{ group.group_id_id }}">
+                            <button type="submit" name="review-submit" class="review-button"><i class="fas fa-paper-plane pdspace"></i> send</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+
+
+                <div class="empty-group">
+                    <a href="includes/deleteGroup.inc.php?groupId='.$gid.'" class="group-close-button"><i class="fas fa-eraser pdspace"></i> DELETE GROUP</a>
+                </div>
+            {% endif %}
+            <!-- *** -->
+
+        </div>
+        <div class="group-details-box">
+            <div>
+                <img src="{% static 'images/group-image.webp' %}" alt="group-img">
+                <div class="image-black-cover"></div>
+            </div>
+
+
+            <div class="group-code-box">#
+                <input type="text" readonly value="{{ GroupOwner.group_code }}" class="group-code">
+            </div>
+
+            <div class="group-detail-sub">
+                <h3 class="group-name">{{ GroupOwner.group_name }}</h3>
+
+                <h4 class="group-hostname">@ <span>{{ GroupOwner.user_id.name }}</span></h4>
+            </div>
+
+            <div style="display: grid;grid-template-columns: repeat(2,1fr);margin-top: 16px;row-gap: 8px;column-gap: 8px;">
+                <h4 class="member-sub-text">TOTAL_MEMBERS</h4>
+                <h4 class="member-sub-text">TOTAL_REVIEWS</h4>
+
+                <h2 class="total-members">{{ group_details.count }}</h2>
+
+                <h2 class="total-members">{{ TotalReview }}</h2>
+
+                {% if GroupOwner.user_id_id == request.session.user_id %}
+                <a href="#" class="group-close-button open-button"><i class="fas fa-lock-open pdspace"></i> OPEN GROUP</a>';
+                {% else %}
+                <a href="#" class="group-close-button"><i class="fas fa-sign-out-alt pdspace"></i> LEAVE GROUP</a>';
+                {% endif %}
+
+
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+            randomColors();
+            function randomColors() {
+                let darkValues = ['#7B241C','#5B2C6F','#1A5276','#21618C','#117864','#0E6655','#1D8348','#9A7D0A','#9C640C','#935116','#873600','#515A5A','#212F3C','#1C2833'];
+                let lightValues = ['#A93226','#7D3C98','#2471A3','#2E86C1','#17A589','#138D75','#28B463','#D4AC0D','#D68910','#CA6F1E','#BA4A00','#707B7C','#2E4053','#273746'];
+                let totalColor = darkValues.length;
+                let el = document.getElementsByClassName('group-username');
+                let randNumber;
+
+                for(let i=0; i<el.length; i++) {
+                    randNumber = Math.floor(Math.random()*totalColor);
+                    el[i].style.background = "linear-gradient("+ lightValues[randNumber] +","+ darkValues[randNumber] +")";
+                }
+            }
+
+
+
+            var copyTextareaBtn = document.querySelector('.group-code');
+
+            copyTextareaBtn.addEventListener('click', function(event) {
+                var copyTextarea = document.querySelector('.group-code');
+                copyTextarea.focus();
+                copyTextarea.select();
+                document.execCommand('copy');
+                console.log("copied");
+                document.getElementsByClassName('copy-message')[0].style.display = "block";
+                setTimeout(() => {
+                    document.getElementsByClassName('copy-message')[0].style.display = "none";
+                }, 5000);
+            });
+        </script>
+
+    </div>
+
+
+{% endblock %}

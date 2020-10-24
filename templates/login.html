@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../fav.ico" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <title>Sign In | bloom</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'info' %}
+                <p class="success-message"><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+    <div class="top-menu-bar">
+        <img src="{% static 'images/logo.svg' %}" alt="logo" class="logo-img">
+
+        <div>
+            <a href="" class="menus active">Login</a>
+            <a href="{% url 'signup' %}" class="menus">Signup</a>
+        </div>
+    </div>
+
+    <div class="log-container">
+            <form action="{% url 'login' %}" method="POST" class="login-main-box">
+                {% csrf_token %}
+                <h2 class="main-heading">Sign in to bloom</h3>
+                <h5 class="sub-heading">Welcome back to bloo, the place we know who am i.</h5>
+                <div class="sub-login-box">
+                    <label for="email" class="input-label">Email</label>
+                    <input type="email" class="input-box" required id="email" name="email">
+                </div>
+                <div class="sub-login-box">
+                    <label for="password" class="input-label">Password</label>
+                    <input type="password" class="input-box" required id="password" name="password">
+                </div>
+                <div class="sub-login-box">
+                    <a class="forgot-password-link" href="forgotpassword.php">i forgot my password!</a>
+                </div>
+                <label style="color: rgba(255,255,255,0.1);font-size: 12px;padding: 0 0 10px 0;">Your are accepting to our Policies and Conditions</label>
+                <button type="submit" name="login-form" class="log-button">Sign In</button>
+                <label style="color: rgba(255,255,255,0.1);font-size: 12px;padding: 10px 0 0 0;">&copy; 2020 bloom</label>
+            </form>
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                <p class="success-message"><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                <p class="success-message"><i class="fas fa-check-circle"></i> {{ message }}</p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

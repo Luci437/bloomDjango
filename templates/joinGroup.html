@@ -1,0 +1,90 @@
+{% extends 'commonPart.html' %}
+
+{% block mainpart %}
+<div class="no-group-container">
+            <!-- <img src="images/no-group.png" alt="no-group" class="no-group-img"> -->
+            <div class="black-cover"></div>
+                            <span id="joinGroupDiv">
+                            <h2 class="welcome-note">Join any group</h2>
+                            <form action="{% url 'joinGroup' %}" method="post" class="join-group-form">
+                                {% csrf_token %}
+                            <table cellspacing="10" style="width: 400px;">
+                                <tr>
+                                    <td>
+                                        <label for="group-id" class="group-label">CODE</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    <input type="text" name="code" onkeyup="checkCode()" onpaste="checkCode()" required maxlength="5" id="group-gen-code" class="group-input">
+                                    <i class="fas fa-check-circle correct-group"></i>
+                                    </td>
+                                </tr>
+                                <tr align="left">
+                                    <td style="display: grid;grid-template-columns: repeat(2,1fr);">
+                                        <button name="find-group-form" class="join-button"> Join group</button>
+                                        <a href="#" class="cancel-button"> Cancel</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                                </span>
+
+
+                        <span id="createGroupDiv">
+                        <h2 class="welcome-note">Create your group</h2>
+                        <form action="{% url 'createGroup' %}" method="post" class="join-group-form">
+                            {% csrf_token %}
+                        <table cellspacing="10" style="width: 400px;">
+                            <tr>
+                                <td>
+                                    <label for="group-id" class="group-label">NAME</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                <input type="text" name="name" required maxlength="20" class="group-input-create">
+                                </td>
+                            </tr>
+                            <tr align="left">
+                            <td style="display: grid;grid-template-columns: repeat(2,1fr);">
+                                    <button name="create-group-form" class="join-button"> Create group</button>
+                                    <a href="#" class="cancel-button"> Cancel</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                        </span>
+
+                    <span id="mainWelcomeDiv">
+                        <h1 class="welcome-note">Welcome to bloom</h1>
+                        <h3 class="welcome-sub-note">You might know everything in this world, but do you know yourself?</h3>
+                        <div class="group-button-box">
+                            <a href="#" id="createGroupButton" class="group-button"><i class="fas fa-folder-plus pdspace"></i> Create group</a>
+                            <a href="#" id="joinGroupButton" class="group-button join-group"><i class="fas fa-plus-square pdspace"></i> Join group</a>
+                        </div>
+                        </span>
+
+                    </div>
+
+    <script type="text/javascript">
+        $('#createGroupButton').on('click', function(){
+            $("#joinGroupDiv").css("display","none");
+            $('#mainWelcomeDiv').css("display","none");
+            $('#createGroupDiv').css("display","flex");
+        });
+
+        $('#joinGroupButton').on("click", function(){
+            $('#createGroupDiv').css("display","none");
+            $('#mainWelcomeDiv').css("display","none");
+            $('#joinGroupDiv').css("display","flex");
+        });
+
+        $('.cancel-button').on('click', function() {
+            $('#createGroupDiv').css("display","none");
+            $('#mainWelcomeDiv').css("display","flex");
+            $('#joinGroupDiv').css("display","none");
+        });
+    </script>
+
+{% endblock %}

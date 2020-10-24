@@ -1,0 +1,40 @@
+{% extends 'commonPart.html' %}
+
+{% block mainpart %}
+    {% load static %}
+
+    <style>
+        .active-menus-reviews {
+            background: #241663;
+            color: white;
+        }
+    </style>
+    <div class="main-review-box">
+        <!-- ** -->
+        {% if reviews %}
+            <h2 class="main-title-groups">Yours Review</h2>
+            <h4 class="main-title-groups" style="font-weight: lighter;padding: 0px 0 24px 0;">You can see all your reviews here.</h4>
+            {% for review in reviews %}
+                <div class="review-container">
+                    <div class="review-user-box"></div>
+                    <h3 class="review-text">{{ review.review }}</h3>
+                    <div class="mark-as-read-box">
+                        <a href="#" class="mark-as-read">MARK AS READ</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="video-box">
+                <div class="video-text-box">
+                    <h1 class="video-text"><i class="fab fa-rocketchat pdspace"></i>Deserted</h1>
+                    <h2 style="color: rgba(255, 255, 255, 0.18);">Join any group or create a new group, reviews are inevitable.</h2>
+                </div>
+                <video autoplay loop playsinline src="{% static 'images/galaxy stone.mp4' %}" class="no-review-video"></video>
+            </div>
+        {% endif %}
+        <!-- ** -->
+
+    </div>
+
+
+{% endblock %}
